@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AmazingShop.Core.Interfaces;
+using AmazingShop.Core.Specification;
 using AmazingShop.Infrastructure;
 using AmazingShop.Infrastructure.Data;
 using Microsoft.AspNetCore.Builder;
@@ -32,7 +33,9 @@ namespace AmazingShop.Api
             services.AddControllers();
             services.AddDbContext<AmazingShopContext>(x=>x.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddTransient<IProductRepository, ProductRepository>();
+            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            services.AddScoped(typeof(ISpecification<>), typeof(BaseSpecification<>));
+            services.AddScoped<IProductRepository, ProductRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
