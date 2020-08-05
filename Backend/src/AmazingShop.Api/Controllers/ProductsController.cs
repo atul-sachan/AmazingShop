@@ -1,11 +1,11 @@
-using System.Linq;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using AmazingShop.Api.Models;
 using AmazingShop.Core.Entities;
 using AmazingShop.Core.Interfaces;
 using AmazingShop.Core.Specification;
-using AmazingShop.Infrastructure.Data;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace AmazingShop.Api.Controllers
 {
@@ -16,19 +16,22 @@ namespace AmazingShop.Api.Controllers
         private readonly IRepository<Product> productRepo;
         private readonly IRepository<ProductBrand> brandRepo;
         private readonly IRepository<ProductType> typeRepo;
+        private readonly IMapper mapper;
         private readonly IProductRepository repository;
 
         public ProductsController(
             IProductRepository repository,
             IRepository<Product> productRepo,
             IRepository<ProductBrand> brandRepo,
-            IRepository<ProductType> typeRepo
+            IRepository<ProductType> typeRepo,
+            IMapper mapper
         )
         {
             this.repository = repository;
             this.productRepo = productRepo;
             this.brandRepo = brandRepo;
             this.typeRepo = typeRepo;
+            this.mapper = mapper;
         }
 
         [HttpGet]
@@ -37,16 +40,16 @@ namespace AmazingShop.Api.Controllers
             //var products = await this.repository.GetProductsAsync();
             var spec = new ProductsWithTypeAndBrandSpecification();
             var products = await this.productRepo.ListAsync(spec);
-            return Ok(products);
+            return Ok(mapper.Map<IReadOnlyList<Product>, IReadOnlyList<ProductModel>>(products));
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetProduct(int id)
         {
             //var product = await this.repository.GetProductByIdAsync(id);
-            //var spec = new ProductsWithTypeAndBrandSpecification();
-            var product = await this.productRepo.GetByIdAsync(id);
-            return Ok(product);
+            var spec = new ProductsWithTypeAndBrandSpecification(id);
+            var product = await this.productRepo.GetEntityWithSpec(spec);
+            return Ok(mapper.Map<ProductModel>(product));
         }
 
         [HttpGet("brands")]

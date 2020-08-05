@@ -9,5 +9,12 @@ namespace AmazingShop.Core.Specification
             AddInclude(x=>x.ProductBrand);
             AddInclude(x=>x.ProductType);
         }
+
+        public ProductsWithTypeAndBrandSpecification(int id)
+            : base(x=>x.Id == id)
+        {
+            AddInclude(x => x.ProductBrand);
+            AddInclude(x => x.ProductType);
+        }
     }
 }

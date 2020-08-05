@@ -1,20 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using AmazingShop.Api.Helpers;
 using AmazingShop.Core.Interfaces;
-using AmazingShop.Core.Specification;
 using AmazingShop.Infrastructure;
 using AmazingShop.Infrastructure.Data;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
 namespace AmazingShop.Api
 {
@@ -32,9 +26,8 @@ namespace AmazingShop.Api
         {
             services.AddControllers();
             services.AddDbContext<AmazingShopContext>(x=>x.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
-
+            services.AddAutoMapper(typeof(MappingProfiles));
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-            services.AddScoped(typeof(ISpecification<>), typeof(BaseSpecification<>));
             services.AddScoped<IProductRepository, ProductRepository>();
         }
 
@@ -49,6 +42,7 @@ namespace AmazingShop.Api
             app.UseHttpsRedirection();
 
             app.UseRouting();
+            app.UseStaticFiles();
 
             app.UseAuthorization();
 
