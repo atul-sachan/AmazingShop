@@ -2,14 +2,16 @@
 using AmazingShop.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AmazingShop.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(AmazingShopContext))]
-    partial class AmazingShopContextModelSnapshot : ModelSnapshot
+    [Migration("20200805135412_initial-migration")]
+    partial class initialmigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
