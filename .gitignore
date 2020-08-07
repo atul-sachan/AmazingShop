@@ -2,7 +2,7 @@
 obj
 bin
 *.db*
-
+**/package-lock.json
 
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
@@ -50,3 +50,4 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+Frontend/client/package-lock.json
