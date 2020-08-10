@@ -14,6 +14,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using StackExchange.Redis;
 using System.Linq;
 
 namespace AmazingShop.Api
@@ -32,6 +33,11 @@ namespace AmazingShop.Api
         {
             services.AddControllers();
             services.AddDbContext<AmazingShopContext>(x => x.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddSingleton<IConnectionMultiplexer>(c=>{
+                var configuration = ConfigurationOptions.Parse(Configuration.GetConnectionString("Redis"), true);
+                return ConnectionMultiplexer.Connect(configuration);
+            });
+
             services.AddAutoMapper(typeof(MappingProfiles));
             services.AddApplicationServices();
             services.AddSwaggerServices();
@@ -58,7 +64,7 @@ namespace AmazingShop.Api
 
             app.UseRouting();
             app.UseStaticFiles();
-
+            
             app.UseCors("CorsPolicy");
 
             app.UseAuthorization();
